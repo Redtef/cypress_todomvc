@@ -27,6 +27,18 @@ describe("Input form", () => {
         .and("contain", todoText1);
     });
 
+    it.only("Show number of todos in footer", () => {
+      cy.get(".new-todo")
+        .type(todoText1)
+        .type("{enter}")
+        .should("have.value", "");
+      cy.get(".new-todo")
+        .type(todoText2)
+        .type("{enter}")
+        .should("have.value", "");
+      cy.get(".todo-count").should("contain", 2);
+    });
+
     it("Adds multiple new todos", () => {
       cy.get(".new-todo")
         .type(todoText1)
@@ -63,7 +75,7 @@ describe("Input form", () => {
       cy.get(`.todo-list li`).eq(0).find(".destroy").should("not.be.visible");
     });
 
-    it("checks if the remove button is hidden",()=>{
+    it("checks if the remove button is hidden", () => {
       cy.get(".new-todo")
         .type(todoText1)
         .type("{enter}")
@@ -76,8 +88,8 @@ describe("Input form", () => {
         .type(todoText3)
         .type("{enter}")
         .should("have.value", "");
-        cy.get(`.todo-list li`).find('.destroy').should('not.visible')
-    })
+      cy.get(`.todo-list li`).find(".destroy").should("not.visible");
+    });
 
     it("shows the remove button on hover", () => {
       cy.get(".new-todo")
@@ -112,12 +124,12 @@ describe("Input form", () => {
         .type(todoText3)
         .type("{enter}")
         .should("have.value", "");
-      cy.get(`.todo-list li`).eq(2).find('.destroy').invoke('show').click();
-      cy.get(`.todo-list li`).contains(todoText3).should('not.exist')
+      cy.get(`.todo-list li`).eq(2).find(".destroy").invoke("show").click();
+      cy.get(`.todo-list li`).contains(todoText3).should("not.exist");
 
-      cy.get(`.todo-list li`).eq(1).find('.destroy').invoke('show').click();
-      cy.get(`.todo-list li`).contains(todoText2).should('not.exist')
-      cy.get(`.todo-list li`).should("have.length", 1)
+      cy.get(`.todo-list li`).eq(1).find(".destroy").invoke("show").click();
+      cy.get(`.todo-list li`).contains(todoText2).should("not.exist");
+      cy.get(`.todo-list li`).should("have.length", 1);
     });
   });
 });
