@@ -9,25 +9,41 @@ describe("All,Active,Completed list and the clear completed tests", () => {
     cy.get(".new-todo").type("sleep{enter}");
     cy.get(".todo-list li:nth-child(2) .toggle").click();
   });
+  function filer(filterType) {
+    cy.contains(filterType).click();
+    if (filterType == "All") {
+      cy.get(".todo-list li")
+        .should("have.length", 4)
+        .and("contain", "build app")
+        .and("contain", "clean the store")
+        .and("contain", "make dinner")
+        .and("contain", "sleep");
+    }
+    if (filterType == "Active") {
+      cy.get(".todo-list li")
+        .should("have.length", 3)
+        .and("contain", "build app")
+        .and("contain", "make dinner")
+        .and("contain", "sleep");
+    }
+    if (filterType == "Completed") {
+      cy.get(".todo-list li")
+        .should("have.length", 1)
+        .and("contain", "clean the store");
+    }
+    if (filterType == "Clear") {
+      cy.get(".todo-list li .selected").should("have.length", 0);
+    }
+  }
+  it("should filter the todo list as All,Active,Completed or clear all completed items", () => {
+    filer("All");
+    filer("Active");
+    filer("Completed");
+    filer("Clear");
+  });
 
-  it("should filter All todo list", () => {
-    cy.contains("All").click();
-    cy.get(".todo-list li").should("have.length", 4);
-  });
-  it("should filter Active todo list", () => {
-    cy.contains("Active").click();
-    cy.get(".todo-list li").should("have.length", 3);
-  });
-  it("should filter Completed todo list", () => {
-    cy.contains("Completed").click();
-    cy.get(".todo-list li").should("have.length", 1);
-  });
-  it("should clear Completed todos", () => {
-    cy.contains("Clear").click();
-    cy.get(".todo-list li").should("have.length", 3);
-  });
-  it.only("should destroy all items", () => {
-    cy.get(".todo-list li").each(($li, index, $list) => {
+  it("should destroy all items", () => {
+    cy.get(".todo-list li").each(() => {
       cy.get(".destroy").click({ force: true, multiple: true });
     });
     cy.get(".todo-list li").should("have.length", 0);
