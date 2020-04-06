@@ -4,6 +4,15 @@ describe("Input form", () => {
   const todoText3 = "Learn ES6";
   const todoText4 = "Learn Cypress";
 
+
+  //* split code into sections to avoid long files 
+  //* avoid code duplication 
+  //* tests start with should 
+  //* find elements by content not by indice 
+  //* use table of element to avoid adding 1 by 1 
+  //* put cypress in test script
+  //* remove tests not asked for 
+  
   beforeEach(() => {
     cy.visit("/");
   });
@@ -17,17 +26,15 @@ describe("Input form", () => {
   });
 
   context("Form submission", () => {
-    it("Adds 1 new todo on submit", () => {
-      cy.get(".new-todo")
-        .type(todoText1)
-        .type("{enter}")
-        .should("have.value", "");
+    it("Should add new todo", () => {
+      const todoList = [todoText1];
+      insertTodoFromList(todoList);
       cy.get(".todo-list li")
         .should("have.length", 1)
         .and("contain", todoText1);
     });
 
-    it.only("Show number of todos in footer", () => {
+    it("Show number of todos in footer", () => {
       cy.get(".new-todo")
         .type(todoText1)
         .type("{enter}")
@@ -39,24 +46,9 @@ describe("Input form", () => {
       cy.get(".todo-count").should("contain", 2);
     });
 
-    it("Adds multiple new todos", () => {
-      cy.get(".new-todo")
-        .type(todoText1)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(".new-todo")
-        .type(todoText2)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(".new-todo")
-        .type(todoText3)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(".new-todo")
-        .type(todoText4)
-        .type("{enter}")
-        .should("have.value", "");
-
+    it("Should add multiple new todos", () => {
+      const todoList = [todoText1,todoText2,todoText3,todoText4];
+      insertTodoFromList(todoList);
       cy.get(".todo-list li")
         .should("have.length", 4)
         .and("contain", todoText1)
@@ -104,26 +96,14 @@ describe("Input form", () => {
     });
 
     it("Removes 1 element", () => {
-      cy.get(".new-todo")
-        .type(todoText4)
-        .type("{enter}")
-        .should("have.value", "");
+      const todoList = [todoText1];
+      insertTodoFromList(todoList);
       cy.get(`.todo-list li`).eq(0).get(".destroy").invoke("show").click();
     });
 
     it("Removes multiple elements", () => {
-      cy.get(".new-todo")
-        .type(todoText1)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(".new-todo")
-        .type(todoText2)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(".new-todo")
-        .type(todoText3)
-        .type("{enter}")
-        .should("have.value", "");
+      const todoList = [todoText1,todoText2,todoText3,todoText4];
+      insertTodoFromList(todoList);
       cy.get(`.todo-list li`).eq(2).find(".destroy").invoke("show").click();
       cy.get(`.todo-list li`).contains(todoText3).should("not.exist");
 
@@ -133,3 +113,12 @@ describe("Input form", () => {
     });
   });
 });
+
+function insertTodoFromList(todoList) {
+  for (const todo of todoList) {
+    cy.get(".new-todo")
+    .type(todo)
+    .type("{enter}")
+  } 
+}
+
