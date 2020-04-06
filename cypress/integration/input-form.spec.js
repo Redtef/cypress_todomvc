@@ -18,7 +18,7 @@ describe("Input form", () => {
   });
 
 
-  context("Form submission", () => {
+  context("Todo addition", () => {
     it("Should add new todo", () => {
       const todoList = [todoText1];
       insertTodoFromList(todoList);
@@ -39,7 +39,7 @@ describe("Input form", () => {
     });
   });
 
-  context("List items actions", () => {
+  context("Todo Deletion", () => {
 
     it("Removes 1 element", () => {
       const todoList = [todoText1];
