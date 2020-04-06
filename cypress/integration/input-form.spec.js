@@ -17,13 +17,6 @@ describe("Input form", () => {
     cy.visit("/");
   });
 
-  it("Selects the todos input", () => {
-    cy.focused().should("have.class", "new-todo");
-  });
-
-  it("accepts input", () => {
-    cy.get(".new-todo").type(todoText4).should("have.value", todoText4);
-  });
 
   context("Form submission", () => {
     it("Should add new todo", () => {
@@ -32,18 +25,6 @@ describe("Input form", () => {
       cy.get(".todo-list li")
         .should("have.length", 1)
         .and("contain", todoText1);
-    });
-
-    it("Show number of todos in footer", () => {
-      cy.get(".new-todo")
-        .type(todoText1)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(".new-todo")
-        .type(todoText2)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(".todo-count").should("contain", 2);
     });
 
     it("Should add multiple new todos", () => {
@@ -59,41 +40,6 @@ describe("Input form", () => {
   });
 
   context("List items actions", () => {
-    it("check if remove button is not visible", () => {
-      cy.get(".new-todo")
-        .type(todoText4)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(`.todo-list li`).eq(0).find(".destroy").should("not.be.visible");
-    });
-
-    it("checks if the remove button is hidden", () => {
-      cy.get(".new-todo")
-        .type(todoText1)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(".new-todo")
-        .type(todoText2)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(".new-todo")
-        .type(todoText3)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(`.todo-list li`).find(".destroy").should("not.visible");
-    });
-
-    it("shows the remove button on hover", () => {
-      cy.get(".new-todo")
-        .type(todoText4)
-        .type("{enter}")
-        .should("have.value", "");
-      cy.get(`.todo-list li`)
-        .eq(0)
-        .get(".destroy")
-        .invoke("show")
-        .should("be.visible");
-    });
 
     it("Removes 1 element", () => {
       const todoList = [todoText1];
