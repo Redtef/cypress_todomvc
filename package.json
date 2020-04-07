@@ -1,15 +1,22 @@
 {
-  "name": "tp_todomvc_test",
+  "name": "cypress_todomvc",
   "version": "1.0.0",
-  "description": "",
+  "description": "tp du module javascript & strategie de tests",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress open"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Redtef/cypress_todomvc.git"
+  },
+  "author": "Hamza Takouit",
   "license": "ISC",
-  "dependencies": {
-    "cypress": "^3.8.3"
+  "bugs": {
+    "url": "https://github.com/Redtef/cypress_todomvc/issues"
+  },
+  "homepage": "https://github.com/Redtef/cypress_todomvc#readme",
+  "devDependencies": {
+    "cypress": "^4.3.0"
   }
 }
