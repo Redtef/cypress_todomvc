@@ -1,37 +1,19 @@
 /// <reference types='cypress' />
-function filer(filterType) {
-  cy.contains(filterType).click();
-  if (filterType == "All") {
-    cy.get(".todo-list li")
-      .should("have.length", 4)
-      .and("contain", "build app")
-      .and("contain", "clean the store")
-      .and("contain", "make dinner")
-      .and("contain", "sleep");
+function shouldStateContainsList(itemState, list, listLength) {
+  cy.contains(itemState).click();
+  cy.get(".todo-list li").should("have.length", listLength);
+  for (const item of list) {
+    cy.get(".todo-list li").should("contain", item);
   }
-  if (filterType == "Active") {
-    cy.get(".todo-list li")
-      .should("have.length", 3)
-      .and("contain", "build app")
-      .and("contain", "make dinner")
-      .and("contain", "sleep")
-      .and("not.contain", "clean the store");
+}
+
+function addNewItems(todos, itemNumberToBeComplete) {
+  for (const todo of todos) {
+    cy.get(".new-todo").type(todo).type("{enter}");
   }
-  if (filterType == "Completed") {
-    cy.get(".todo-list li")
-      .should("have.length", 1)
-      .and("contain", "clean the store")
-      .and("not.contain", "build app")
-      .and("not.contain", "sleep")
-      .and("not.contain", "make dinner");
-  }
-  if (filterType == "Clear") {
-    cy.get(".todo-list li").should("have.length", 0);
-    cy.contains("All").click();
-    cy.get(".todo-list li")
-      .should("not.contain", "clear the store")
-      .and("have.length", "3");
-  }
+  cy.get(
+    ".todo-list li:nth-child(" + itemNumberToBeComplete + ") .toggle"
+  ).click();
 }
 
 describe("All,Active,Completed list and the clear completed tests", () => {
@@ -40,24 +22,19 @@ describe("All,Active,Completed list and the clear completed tests", () => {
   });
 
   it("should filter the todo list as All,Active,Completed or clear all completed items", () => {
-    cy.get(".new-todo").type("build app{enter}");
-    cy.get(".new-todo").type("clean the store{enter}");
-    cy.get(".new-todo").type("make dinner{enter}");
-    cy.get(".new-todo").type("sleep{enter}");
-    cy.get(".todo-list li:nth-child(2) .toggle").click();
-
-    filer("All");
-    filer("Active");
-    filer("Completed");
-    filer("Clear");
+    addNewItems(["make dinner", "build app", "sleep", "clean the store"], 4);
+    shouldStateContainsList(
+      "All",
+      ["make dinner", "build app", "sleep", "clean the store"],
+      4
+    );
+    shouldStateContainsList("Active", ["make dinner", "build app", "sleep"], 3);
+    shouldStateContainsList("Completed", ["clean the store"], 1);
+    shouldStateContainsList("Clear", [], 0);
   });
 
   it("should destroy all items", () => {
-    cy.get(".new-todo").type("build app{enter}");
-    cy.get(".new-todo").type("clean the store{enter}");
-    cy.get(".new-todo").type("make dinner{enter}");
-    cy.get(".new-todo").type("sleep{enter}");
-    cy.get(".todo-list li:nth-child(2) .toggle").click();
+    addNewItems(["make dinner", "build app", "sleep", "clear the store"], 2);
     cy.get(".todo-list li").each(() => {
       cy.get(".destroy").click({ force: true, multiple: true });
     });
